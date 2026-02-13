@@ -106,7 +106,7 @@
     resultBox.style.display = "block";
   }
 
-  function createHearts() {
+  function createHearts(disable = false) {
     heartContainer.innerHTML = "";
     const hearts = [];
 
@@ -118,6 +118,11 @@
     }
 
     shuffle(hearts).forEach(h => heartContainer.appendChild(h));
+
+    if (disable) {
+      hearts.forEach(h => h.style.cursor = "default");
+      return;
+    }
 
     hearts.forEach(heart => {
       heart.addEventListener("click", () => {
@@ -138,9 +143,10 @@
   const savedAmount = localStorage.getItem("chosenAmount");
   if (savedAmount) {
     showResult(savedAmount);
+    createHearts(true); // disable hearts
+  } else {
+    createHearts(false); // allow play
   }
-
-  createHearts();
 </script>
 
 </body>
