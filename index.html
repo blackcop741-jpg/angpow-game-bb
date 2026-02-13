@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>紅包尋寶遊戲</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url("file:///C:/Users/Admin/Downloads/pj.gif") no-repeat center center fixed;
+    background-size: contain; /* fits the whole image */
+    background-position: center center;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  h1 {
+    color: #fff;
+    text-shadow: 0 0 8px rgba(0,0,0,0.7);
+    margin-bottom: 4px;
+  }
+  p {
+    color: #fff;
+    text-shadow: 0 0 6px rgba(0,0,0,0.6);
+    margin-top: 0;
+    margin-bottom: 18px;
+  }
+  .hearts {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 28px;
+  }
+  .heart {
+    font-size: 54px;
+    cursor: pointer;
+    transition: transform 0.25s;
+  }
+  .heart:hover {
+    transform: scale(1.2);
+  }
+  .result {
+    display: none;
+    background: rgba(255,255,255,0.93);
+    padding: 22px 28px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.3);
+    text-align: center;
+    max-width: 300px;
+  }
+  .result h2 {
+    margin: 0;
+    color: #d81b60;
+    font-size: 24px;
+  }
+  .result p {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+  }
+</style>
+</head>
+<body>
+
+  <h1>紅包尋寶遊戲</h1>
+  <p>點擊一個愛心，揭開你的幸運紅包 💖</p>
+
+  <div class="hearts" id="heartContainer"></div>
+
+  <div class="result" id="resultBox">
+    <h2 id="resultTitle"></h2>
+    <p id="resultMessage"></p>
+  </div>
+
+<script>
+  const amounts = [88, 128, 188, 238, 288];
+
+  const messages = {
+    88: "恭喜 BB❤️！💝 你找到寶藏了！你的紅包是：RM88 🧧\n但最珍貴的禮物是你的笑容。😘",
+    128: "BB❤️，你找到幸運愛心了！💖你的紅包是：RM128 🧧\n和你在一起的每一天都像在慶祝。❤️",
+    188: "BB❤️，你解鎖了寶藏！✨你的紅包是：RM188 🧧\n我對你的愛比任何紅包都大。💘",
+    238: "哇 BB❤️！你超幸運的！🍀你的紅包是：RM238 🧧\n這只是提醒你，你對我來說是全世界。💞",
+    288: "BB❤️，你找到最好的那個！💝你的紅包是：RM288 🧧\n你是我永遠的情人。❤️"
+  };
+
+  const heartContainer = document.getElementById("heartContainer");
+  const resultBox = document.getElementById("resultBox");
+  const resultTitle = document.getElementById("resultTitle");
+  const resultMessage = document.getElementById("resultMessage");
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  const hearts = [];
+  for (let i = 0; i < 5; i++) {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.textContent = "❤️";
+    hearts.push(heart);
+  }
+
+  shuffle(hearts).forEach(h => heartContainer.appendChild(h));
+
+  let clicked = false;
+
+  hearts.forEach(heart => {
+    heart.addEventListener("click", () => {
+      if (clicked) return;
+      clicked = true;
+
+      const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+
+      resultTitle.textContent = "你找到寶藏了！";
+      resultMessage.textContent = messages[randomAmount];
+      resultBox.style.display = "block";
+
+      hearts.forEach(h => h.style.cursor = "default");
+    });
+  });
+</script>
+
+</body>
+</html>
