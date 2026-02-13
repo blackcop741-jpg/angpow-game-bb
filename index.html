@@ -1,12 +1,153 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY x 情人节 紅包尋寶遊戲</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNY x 情人节 紅包尋寶遊戲</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url("pj.gif") no-repeat center center fixed;
+    background-size: contain;
+    background-position: center center;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  h1 {
+    color: #fff;
+    text-shadow: 0 0 8px rgba(0,0,0,0.7);
+    margin-bottom: 4px;
+  }
+  p {
+    color: #fff;
+    text-shadow: 0 0 6px rgba(0,0,0,0.6);
+    margin-top: 0;
+    margin-bottom: 18px;
+  }
+  .hearts {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 28px;
+  }
+  .heart {
+    font-size: 54px;
+    cursor: pointer;
+    transition: transform 0.25s;
+  }
+  .heart:hover {
+    transform: scale(1.2);
+  }
+  .result {
+    display: none;
+    background: rgba(255,255,255,0.93);
+    padding: 22px 28px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.3);
+    text-align: center;
+    max-width: 300px;
+  }
+  .result h2 {
+    margin: 0;
+    color: #d81b60;
+    font-size: 24px;
+  }
+  .result p {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+  }
+</style>
 </head>
 <body>
-    <h1>CNY x 情人节 紅包尋寶尋寶遊戲</h1>
-    <!-- Additional content goes here -->
+
+  <h1>CNY x 情人节 紅包尋寶遊戲</h1>
+  <p>點擊一個愛心，揭開你的幸運紅包💖</p>
+
+  <div class="hearts" id="heartContainer"></div>
+
+  <div class="result" id="resultBox">
+    <h2 id="resultTitle"></h2>
+    <p id="resultMessage"></p>
+  </div>
+
+<script>
+  const amounts = [88, 128, 188, 238, 288];
+
+  const messages = {
+    88: "恭喜 BB❤️中奖了！💝 你找到寶藏了！你的紅包是：RM88 🧧\n我的小小心意，希望你开心。😘",
+    128: "恭喜BB❤️ 中奖了！💖你的紅包是：RM128 🧧\n我的小小心意，希望你开心。❤️",
+    188: "YEAH ! BB❤️ 中奖了！✨你的紅包是：RM188 🧧\n我的小小心意，希望你开心。💘",
+    238: "YEAH !BB❤️！你超幸運的！🍀你的紅包是：RM238 🧧\n我的小小心意，希望你开心。💞",
+    288: "YEAH !厉害！！！BB❤️ 你选到大奖！💝你的紅包是：RM288 🧧\n我的小小心意，希望你开心。❤️"
+  };
+
+  const heartContainer = document.getElementById("heartContainer");
+  const resultBox = document.getElementById("resultBox");
+  const resultTitle = document.getElementById("resultTitle");
+  const resultMessage = document.getElementById("resultMessage");
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function showResult(amount) {
+    resultTitle.textContent = "你找到寶藏了！";
+    resultMessage.textContent = messages[amount];
+    resultBox.style.display = "block";
+  }
+
+  function createHearts(disable = false) {
+    heartContainer.innerHTML = "";
+    const hearts = [];
+
+    for (let i = 0; i < 5; i++) {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.textContent = "❤️";
+      hearts.push(heart);
+    }
+
+    shuffle(hearts).forEach(h => heartContainer.appendChild(h));
+
+    if (disable) {
+      hearts.forEach(h => h.style.cursor = "default");
+      return;
+    }
+
+    hearts.forEach(heart => {
+      heart.addEventListener("click", () => {
+        // Check if already chosen
+        if (localStorage.getItem("chosenAmount")) return;
+
+        const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+        localStorage.setItem("chosenAmount", randomAmount);
+
+        showResult(randomAmount);
+
+        hearts.forEach(h => h.style.cursor = "default");
+      });
+    });
+  }
+
+  // Check if already chosen before
+  const savedAmount = localStorage.getItem("chosenAmount");
+  if (savedAmount) {
+    showResult(savedAmount);
+    createHearts(true); // disable hearts
+  } else {
+    createHearts(false); // allow play
+  }
+</script>
+
 </body>
 </html>
