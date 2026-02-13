@@ -100,32 +100,47 @@
     return array;
   }
 
-  const hearts = [];
-  for (let i = 0; i < 5; i++) {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.textContent = "❤️";
-    hearts.push(heart);
+  function showResult(amount) {
+    resultTitle.textContent = "你找到寶藏了！";
+    resultMessage.textContent = messages[amount];
+    resultBox.style.display = "block";
   }
 
-  shuffle(hearts).forEach(h => heartContainer.appendChild(h));
+  function createHearts() {
+    heartContainer.innerHTML = "";
+    const hearts = [];
 
-  let clicked = false;
+    for (let i = 0; i < 5; i++) {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.textContent = "❤️";
+      hearts.push(heart);
+    }
 
-  hearts.forEach(heart => {
-    heart.addEventListener("click", () => {
-      if (clicked) return;
-      clicked = true;
+    shuffle(hearts).forEach(h => heartContainer.appendChild(h));
 
-      const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+    hearts.forEach(heart => {
+      heart.addEventListener("click", () => {
+        // Check if already chosen
+        if (localStorage.getItem("chosenAmount")) return;
 
-      resultTitle.textContent = "你找到寶藏了！";
-      resultMessage.textContent = messages[randomAmount];
-      resultBox.style.display = "block";
+        const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+        localStorage.setItem("chosenAmount", randomAmount);
 
-      hearts.forEach(h => h.style.cursor = "default");
+        showResult(randomAmount);
+
+        hearts.forEach(h => h.style.cursor = "default");
+      });
     });
-  });
+  }
+
+  // Check if already chosen before
+  const savedAmount = localStorage.getItem("chosenAmount");
+  if (savedAmount) {
+    showResult(savedAmount);
+  }
+
+  createHearts();
 </script>
 
 </body>
